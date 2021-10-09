@@ -1,4 +1,4 @@
-package vip.comic18.finder.config;
+package io.github.jiayaoO3O.finder.config;
 
 import io.vertx.core.net.ProxyOptions;
 import io.vertx.core.net.ProxyType;
@@ -32,8 +32,12 @@ public class ComicConfig {
     public WebClient getWebClient() {
         var webClientOptions = new WebClientOptions();
         if(proxyHost.isPresent() && proxyPort.isPresent()) {
-            webClientOptions.setProxyOptions(new ProxyOptions().setHost(proxyHost.get()).setPort(proxyPort.get()).setType(ProxyType.HTTP));
+            webClientOptions.setProxyOptions(new ProxyOptions().setHost(proxyHost.get())
+                    .setPort(proxyPort.get())
+                    .setType(ProxyType.HTTP));
         }
+        webClientOptions.setUserAgentEnabled(true);
+        webClientOptions.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4482.0 Safari/537.36 Edg/92.0.878.0");
         webClientOptions.setVerifyHost(false);
         webClientOptions.setSsl(true);
         return WebClient.create(vertx, webClientOptions);

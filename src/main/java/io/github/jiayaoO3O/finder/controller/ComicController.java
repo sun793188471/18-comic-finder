@@ -1,8 +1,8 @@
-package vip.comic18.finder.controller;
+package io.github.jiayaoO3O.finder.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import vip.comic18.finder.service.ComicService;
+import io.github.jiayaoO3O.finder.service.ComicService;
 import io.smallrye.mutiny.Uni;
 import org.jboss.logging.Logger;
 
@@ -29,15 +29,20 @@ public class ComicController {
     @Path("/download")
     @Produces(MediaType.APPLICATION_JSON)
     public Uni<String> download(@QueryParam("homePage") String homePage) {
-        if(homePage == null) {
+        if(StrUtil.isEmpty(homePage)) {
             log.error("download->homePage为空");
-            return Uni.createFrom().item("homePage为空");
+            return Uni.createFrom()
+                    .item("homePage为空");
         }
         if(!HttpUtil.isHttps(homePage) && !HttpUtil.isHttp(homePage)) {
             log.error(StrUtil.format("download->homePage参数:[{}]并非http或https链接", homePage));
-            return Uni.createFrom().item(StrUtil.format("homePage参数:[{}]并非http或https链接", homePage));
+            return Uni.createFrom()
+                    .item(StrUtil.format("homePage参数:[{}]并非http或https链接", homePage));
         }
-        comicService.getComicInfo(homePage).subscribe().with(body -> comicService.consume(homePage, body));
-        return Uni.createFrom().item(StrUtil.format("已经添加任务:[{}]", homePage));
+        comicService.getComicInfo(homePage)
+                .subscribe()
+                .with(body -> comicService.consume(homePage, body));
+        return Uni.createFrom()
+                .item(StrUtil.format("已经添加任务:[{}]", homePage));
     }
 }
