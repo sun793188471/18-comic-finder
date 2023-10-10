@@ -116,6 +116,7 @@ public class TaskService {
             }
             if(StrUtil.hasEmpty(id, name, url)) {
                 //对于多章漫画, 存在为空数据直接跳过这一章
+                log.warn("章节信息：{}",body);
                 log.error(StrUtil.format("获取章节信息失败->解析漫画url/name/id为空,跳过本章节"));
                 continue;
             }
