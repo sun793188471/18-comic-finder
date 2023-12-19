@@ -69,6 +69,7 @@ public class TaskService {
     private static final int[] rule = new int[]{2, 4, 6, 8, 10, 12, 14, 16, 18, 20};
 
     public Uni<List<ChapterEntity>> processChapterInfo(String body, String homePage) {
+
         List<ChapterEntity> chapterEntities = new ArrayList<>();
         //var host = "https://" + StrUtil.subBetween(homePage, "//", "/");
         var host = "https://" + domain;
@@ -88,6 +89,7 @@ public class TaskService {
             //获取章节id
             String id = StrUtil.subAfter(url, '/', true);
             if(StrUtil.hasEmpty(id, name, url)) {
+                log.warn("response body:", body);
                 //对于单章漫画, 存在为空的情况直接退出程序了
                 log.error(StrUtil.format("获取章节信息失败->解析漫画url/name/id为空,程序退出"));
                 Quarkus.asyncExit();
