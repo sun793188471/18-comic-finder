@@ -6,14 +6,14 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
 import io.github.jiayaoO3O.finder.service.ComicService;
 import io.github.jiayaoO3O.finder.service.TaskService;
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
-import org.jboss.logging.Logger;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,9 +22,10 @@ import java.util.List;
  */
 @QuarkusMain
 public class ComicRunner implements QuarkusApplication {
+    private static final Log log = Log.get();
+
     private final List<String> comicHomePages = JSONUtil.toList(new ClassPathResource("downloadPath.json").readUtf8Str(), String.class);
-    @Inject
-    Logger log;
+    
     @Inject
     ComicService comicService;
     @Inject
@@ -44,10 +45,8 @@ public class ComicRunner implements QuarkusApplication {
             log.info("下载列表为空,终止任务");
             return 0;
         }
-        comicHomePages.forEach(comicHomePage -> comicService.getComicInfo(comicHomePage)
-                .subscribe()
-                .with(body -> comicService.consume(comicHomePage, body)));
-        while(!taskService.exit()) {
+        comicHomePages.forEach(comicService::processComic);
+        while(!taskService.processExit()) {
             ThreadUtil.sleep(8000L);
         }
         log.info("任务结束,看漫愉快");
