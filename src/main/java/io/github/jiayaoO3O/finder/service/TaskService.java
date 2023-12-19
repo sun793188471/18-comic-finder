@@ -89,7 +89,7 @@ public class TaskService {
             //获取章节id
             String id = StrUtil.subAfter(url, '/', true);
             if(StrUtil.hasEmpty(id, name, url)) {
-                log.warn("response body:", body);
+                log.warn("response body:{}", body);
                 //对于单章漫画, 存在为空的情况直接退出程序了
                 log.error(StrUtil.format("获取章节信息失败->解析漫画url/name/id为空,程序退出"));
                 Quarkus.asyncExit();
@@ -325,6 +325,7 @@ public class TaskService {
     }
 
     public Uni<HttpResponse<Buffer>> postRetry(String url) {
+        log.info("=========url:{}",url);
         return this.post(url)
                 .onFailure()
                 .recoverWithUni(response -> {
